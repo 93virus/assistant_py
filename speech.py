@@ -5,7 +5,6 @@ import wikipedia
 import os
 import webbrowser
 import pyautogui
-from tkinter import *
 
 assistantName = "Jarvis"
 username = "Bekaass"
@@ -13,13 +12,12 @@ dob = 2000
 age = time.localtime(time.time()).tm_year - dob
 r = sr.Recognizer()
 
-time.sleep(0)
-
 def say(string):
     engine = pyttsx3.init()
     engine.setProperty("rate",140)
     engine.say(string)
     engine.runAndWait()
+
 
 def greet():
     hour = time.localtime(time.time()).tm_hour
@@ -125,4 +123,5 @@ while True:
         time.sleep(300)
         print("--Returned from sleep--\n")
         say(assistantName + "is active")
-        
+
+    
