@@ -5,16 +5,18 @@ import wikipedia
 import os
 import webbrowser
 import pyautogui
+import requests
 
 assistantName = "Jarvis"
 username = "Bekaass"
 dob = 2000
 age = time.localtime(time.time()).tm_year - dob
+city = "Bengaluru"
 r = sr.Recognizer()
 
 def say(string):
     engine = pyttsx3.init()
-    engine.setProperty("rate",140)
+    engine.setProperty("rate",100)
     engine.say(string)
     engine.runAndWait()
 
@@ -40,7 +42,7 @@ def wikisearch(string):
         say("Something went wrong")
 
 def recognise():
-    r.energy_threshold = 3500
+    r.energy_threshold = 5000
     print("Recognising..")
     speechText = ""
     try:
@@ -58,6 +60,9 @@ def recognise():
         say("say again")
     return speechText
 
+# greet()
+# time.sleep(0)
+# say(assistantName + "is active")
 
 while True:
     text = recognise()
@@ -92,6 +97,7 @@ while True:
     elif ("search internet" in text):
         webbrowser.open("google.com")
         print("--Browser opened--")
+        say("What do you want to search?")
         search = recognise()
         while (search == ""):
             say("say again")
@@ -124,4 +130,25 @@ while True:
         print("--Returned from sleep--\n")
         say(assistantName + "is active")
 
-    
+    elif ("weather" in text):
+        api_key = "4f3b695647f43ab20f17c217d4c24c7e"
+        url = f"http://api.openweathermap.org/data/2.5/weather?q={city}&appid={api_key}"
+        response = requests.get(url)
+        x=response.json()
+        if x["cod"] != "404":
+            y = x["main"]
+            current_temperature = y["temp"]
+            current_temperature = int(current_temperature) - 273.15
+            current_temperature = format(current_temperature,'.2f')
+            z = x["weather"]
+            weather_desc = z[0]["description"]
+            print("\n==============================")
+            print("Weather of " + city)
+            print("-------------------------------")
+            print(f"Temperature : {current_temperature}C")
+            print(f"Description : {weather_desc}")
+            print("==============================\n")
+            say("Current temperature is " + current_temperature)
+            say("Weather is " + weather_desc)
+        else:
+            say("Something went wrong")
