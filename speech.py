@@ -6,6 +6,7 @@ import os
 import webbrowser
 import pyautogui
 import requests
+import datetime
 
 assistantName = "Jarvis"
 username = "Bekaass"
@@ -16,7 +17,7 @@ r = sr.Recognizer()
 
 def say(string):
     engine = pyttsx3.init()
-    engine.setProperty("rate",100)
+    engine.setProperty("rate",120)
     engine.say(string)
     engine.runAndWait()
 
@@ -58,6 +59,10 @@ def recognise():
     except sr.UnknownValueError:
         print("Unknown error occurred")
         say("say again")
+    except sr.WaitTimeoutError:
+        print("--Timeout--")
+    except Exception as e:
+        pass
     return speechText
 
 # greet()
@@ -152,3 +157,45 @@ while True:
             say("Weather is " + weather_desc)
         else:
             say("Something went wrong")
+
+    elif ("how are you" in text):
+        message = "I'm fine. I am Glad you asked me that. What about you?"
+        print(message + "\n")
+        say(message)
+    
+    elif ("i am fine" in text or "i am good" in text):
+        message = "Glad to hear that"
+        print(message + "\n")
+        say(message)
+
+    elif ("good morning" in text):
+        message = "A warm morning. How are you " + username
+        print(message + "\n")
+        say(message)
+    
+    elif (assistantName.lower() in text):
+        greet()
+        message = assistantName + " 1 point o in your service"
+        print(message + "\n")
+        say(message)
+
+    elif ("write a note" in text):
+        message = "What should i write, sir"
+        say(message)
+        date = (datetime.date.today()).strftime("%B %d, %Y")
+        time = (datetime.datetime.now()).strftime("%H:%M:%S")
+        note = recognise()
+        file = open(assistantName+".txt",'a+')
+        file.write(date + " " + time + "\n")
+        countLines = 0
+        while ("full stop" not in note):
+            countLines = countLines + 1
+            file.write(note)
+            file.write("\n")
+            note = recognise()
+        file.write("--------------")
+        file.write("\nLines : " + str(countLines))
+        file.write("\n==============")
+        file.write("\n\n")
+        file.close()
+        print("--Note is stopped--\n")
