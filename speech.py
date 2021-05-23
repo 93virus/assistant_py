@@ -36,12 +36,10 @@ def greet():
 def wikisearch(string):
     try:
         result = wikipedia.summary(string, sentences=2)
-        display.set(result)
         print(result)
         say(result)
     except:
         say("Something went wrong")
-        display.set("Something went wrong")
 
 def recognise():
     r.energy_threshold = 3500
